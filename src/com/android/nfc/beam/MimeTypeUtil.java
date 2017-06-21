@@ -37,7 +37,19 @@ public final class MimeTypeUtil {
         } else if (uri.getScheme().equals(ContentResolver.SCHEME_FILE)) {
             String extension = MimeTypeMap.getFileExtensionFromUrl(uri.getPath()).toLowerCase();
             if (extension != null) {
-                return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+                String mimetype=MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+                if( mimetype != null )
+                {
+                    return mimetype;
+                }
+                else
+                {
+                    String filePath=uri.getPath();
+                    String suffix = filePath.substring(filePath.lastIndexOf(".") + 1).toLowerCase();
+                    mimetype=MimeTypeMap.getSingleton().getMimeTypeFromExtension(suffix);
+                    Log.d(TAG,"Let's try one more time to get mimetype,and will return "+mimetype);
+                    return mimetype;
+                }
             } else {
                 return null;
             }
